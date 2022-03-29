@@ -1,3 +1,4 @@
+import analyzer.Analyzer
 import java.io.File
 
 const val FILE_ARGUMENT_INDEX = 0
@@ -10,5 +11,5 @@ fun main(args: Array<String>) {
 
     val inputFile = File(args[FILE_ARGUMENT_INDEX])
 
-    // create analyzer with inputfile
+    Analyzer.initialize(inputFile)
 }

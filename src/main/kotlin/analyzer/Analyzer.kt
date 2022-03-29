@@ -4,6 +4,9 @@ import java.io.File
 import java.io.IOException
 
 object Analyzer {
+    private const val VALID_FILE_WRITE_TYPE_1 = "xml"
+    private const val VALID_FILE_WRITE_TYPE_2 = "vm"
+    private const val VALID_FILE_READ_TYPE    = "jack"
     /*
     prompt>JackAnalyzer source
     Where source is either a file name of the form Xxx.jack or the name of a folder containing one or more .jack files.
@@ -23,6 +26,16 @@ object Analyzer {
     fun initialize(inputFile: File) {
         if (!inputFile.exists()) return
 
+        val resultFilePath = if (inputFile.isDirectory) "${inputFile.path}${File.separator}${inputFile.name}.${VALID_FILE_WRITE_TYPE_1}"
+        else "${inputFile.parentFile}${File.separator}${inputFile.nameWithoutExtension}.${VALID_FILE_WRITE_TYPE_1}"
 
+        try {
+           if (inputFile.isDirectory) inputFile.walk().forEach { /* TODO */ }
+            else {/* TODO */}
+        } catch (e: IOException) {
+            throw e
+        } finally {
+            // Clean up anything which requires closing.
+        }
     }
 }
