@@ -3,6 +3,58 @@
 ### Purpose
 The Jack Compiler exists for the purpose of translating the high level programming Jack into bytecode.
 
+### Grammar
+|   Notation | Description                                           |
+|-----------:|:------------------------------------------------------|
+|  '__xxx__' | Represents language tokens that appear verbatim       |
+|        xxx | Represents names of terminal and nonterminal elements |
+|        ( ) | Used for grouping                                     |
+| x &#124; y | Either x or y                                         |
+|        x y | x is followed by y                                    |
+|         x? | x appears 0 or 1 times                                |
+|         x* | x appears 0 or more times                             |
+
+|  Lexical elements | The Jack language includes five types of terminal elements (tokens)                                                                                                                                                                                                                                                                                                                                 |
+|------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|           keyword | '__class__' &#124; '__constructor__' &#124; '__function__' &#124; '__method__' &#124; '__field__' &#124; '__static__' &#124; '__var__' &#124; '__int__' &#124; '__char__' &#124; '__boolean__' &#124; '__void__' &#124; '__true__' &#124; '__false__' &#124; '__null__' &#124; '__this__' &#124; '__let__' &#124; '__do__' &#124; '__if__' &#124; '__else__' &#124; '__while__' &#124; '__return__' |
+|            symbol | '__{__' &#124; '__}__' &#124; '__(__' &#124; '__)__' &#124; '__\[__' &#124; '__\]__' &#124; '__.__' &#124; '__,__' &#124; '__;__' &#124; '__+__' &#124; '__-__' &#124; '__*__' &#124; '__/__' &#124; '__&__' &#124; '__&#124;__' &#124; '__<__' &#124; '__>__' &#124; '__=__' &#124; '__~__'                                                                                                        |
+|   integerConstant | A decimal integer in the range of 0...32767                                                                                                                                                                                                                                                                                                                                                         |
+|    StringConstant | '"' A sequence of characters not including double quote or newline '"'                                                                                                                                                                                                                                                                                                                              |
+|        identifier | A sequence of letters, digits, and underscore ('_'), not starting with a digit                                                                                                                                                                                                                                                                                                                      |
+
+| Program structure | A jack program is a collection of classes, each appearing in a separate file. The compilation unit is a class. A class is a sequence of tokens as follows |
+|------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------|
+|             class | '__class__' _className_ '__{__' _classVarDec_* _subroutineDec_* '__}__'                                                                                   |
+|       classVarDec | ('__static__' &#124; '__field__') _type_ _varName_ ('__,__' _varName_)* '__;__'                                                                           |
+|              type | '__int__' &#124; '__char__' &#124; '__boolean__' &#124; _className_                                                                                       |
+|     subroutineDec | ('__constructor__' &#124; '__function__' &#124; '__method__') ('__void__' &#124; _type_) _subroutineName_ '(' _parameterList_ ')' _subroutineBody_        |
+|     parameterList | ( (_type_ _varName_) ('__,__' _type_ _varName_)* )?                                                                                                       |
+|    subroutineBody | '__{__' _varDec_* _statements_ '__}__'                                                                                                                    |
+|            varDec | '__var__' _type_ _varName_ ('__,__' _varName_)* '__;__'                                                                                                   |
+|         className | _identifier_                                                                                                                                              |
+|    subroutineName | _identifier_                                                                                                                                              |
+|           varName | _identifier_                                                                                                                                              |
+
+|      Statements |                                                                                                               |
+|----------------:|:--------------------------------------------------------------------------------------------------------------|
+ |      statements | _statement_*                                                                                                  |
+|       statement | _letStatement_ &#124; _ifStatement_ &#124; _whileStatement_ &#124; _doStatement_ &#124; _returnStatement_     |
+|    letStatement | '__let__' _varName_ ('__\[__' _expression_ '__\]__')? '__=__' _expression_ '__;__'                            |
+|     ifStatement | '__if__' '__(__' _expression_ '__)__' '__{__' _statements_ '__}__' ('__else__' '__{__' _statements_ '__}__')? |
+|  whileStatement | '__while__' '__(__' _expression_ '__)__' '__{__' _statements_ '__}__'                                         |
+|     doStatement | '__do__' _subroutineCall_ '__;__'                                                                             |
+| returnStatement | '__return__' _expression_? '__;__'                                                                            |
+
+|     Expressions |                                                                                                                                                                                                                         |
+|----------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|      expression | _term (op term)_*                                                                                                                                                                                                       |
+|            term | _integerConstant_ &#124; _stringConstant_ &#124; _keywordConstant_ &#124; _varName_ &#124; _varName_ '__\[__' _expression_ '__\]__' &#124; '__(__' _expression_ '__)__' &#124; (_unaryOp term_) &#124; _subroutineCall_ |
+|  subroutineCall | _subroutineName_ '__(__' _expressionList_ '__)__' &#124; (_className_ &#124; _varName_) '__.__' _subroutineName_ '__(__' _expressionList_ '__)__'                                                                       |
+|  expressionList | (_expression_ ('__,__' _expression_)* )?                                                                                                                                                                                |
+|              op | '__+__' &#124; '__-__' &#124; '__*__' &#124; '__/__' &#124; '__&__' &#124; '__&#124;__' &#124; '__<__' &#124; '__>__' &#124; '__=__'                                                                                    |
+|         unaryOp | '__-__' &#124; '__~__'                                                                                                                                                                                                  |
+| keywordConstant | '__true__' &#124; '__false__' &#124; '__null__' &#124; '__this__'                                                                                                                                                       |
+
 ### Specification
 This project consists of three modules which interact in order to generate either XML code or bytecode.
 - Analyzer: The main program that drives the overall syntax analysis process, using the services of a Tokenizer and a CompilationEngine.
