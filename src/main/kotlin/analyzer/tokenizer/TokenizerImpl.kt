@@ -1,8 +1,12 @@
-package tokenizer
+package analyzer.tokenizer
 
+import analyzer.parser.Parser
 import java.io.File
 
-class TokenizerImpl(val inputFile: File) : Tokenizer {
+class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
+
+    private val tokens: List<String> = parse(inputFile)
+
     /**
      * Are there more tokens in the input.
      *

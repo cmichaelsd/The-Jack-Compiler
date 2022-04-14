@@ -1,4 +1,4 @@
-package tokenizer
+package analyzer.tokenizer
 
 interface Tokenizer {
     fun hasMoreTokens(): Boolean

@@ -1,4 +1,4 @@
-package tokenizer
+package analyzer.tokenizer
 
 enum class TokenType {
     KEYWORD,
