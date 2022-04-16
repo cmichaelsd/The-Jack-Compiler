@@ -1,11 +1,6 @@
-package analyzer.tokenizer
+package analyzer.tokenizer.lexicalElements
 
 interface LexicalElement {
-    /**
-     * A list containing all valid elements for the current lexical element.
-     */
-    val validElement: Set<String>
-
     /**
      * Returns the token type for the current lexical element.
      *
@@ -19,5 +14,5 @@ interface LexicalElement {
      * @param  element a string representing a lexical element
      * @return Boolean
      */
-    fun has(element: String): Boolean = validElement.contains(element)
+    fun has(element: String): Boolean
 }

@@ -1,6 +1,6 @@
-package analyzer.tokenizer
+package analyzer.tokenizer.lexicalElements
 
-object Symbol : LexicalElement {
+object Symbol : LanguageDefinedLexicalElement {
     override val validElement: Set<String> = setOf(
         "{",
         "}",

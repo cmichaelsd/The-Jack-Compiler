@@ -1,14 +1,23 @@
 package analyzer.tokenizer
 
 import analyzer.parser.Parser
+import analyzer.tokenizer.lexicalElements.*
 import java.io.File
 
 class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
-
+    /**
+     * A list of tokens parsed from the input file.
+     */
     private val tokens: List<String> = parse(inputFile)
 
+    /**
+     * The current index being observed by the tokenizer.
+     */
     private var index = -1
 
+    /**
+     * The current token being observed.
+     */
     private var currentToken = ""
 
     /**
@@ -31,20 +40,27 @@ class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
      * Returns the type of the current token, as a constant.
      *
      * @return TokenType
+     * @throws TokenTypeException
      */
+    @Throws(TokenTypeException::class)
     override fun tokenType(): TokenType {
-        TODO("Not yet implemented")
+        return when {
+            KeyWord.has(currentToken)         -> KeyWord.getType()
+            Symbol.has(currentToken)          -> Symbol.getType()
+            IntegerConstant.has(currentToken) -> IntegerConstant.getType()
+            StringConstant.has(currentToken)  -> StringConstant.getType()
+            Identifier.has(currentToken)      -> Identifier.getType()
+            else                              -> throw TokenTypeException("Illegal token type found: $currentToken")
+        }
     }
 
     /**
      * Returns the keyword which is the current token, as a constant.
      * This method should be called only if tokenType is KEYWORD.
      *
-     * @return KeyWord
+     * @return KeyWord.Element
      */
-    override fun keyWord(): KeyWord {
-        TODO("Not yet implemented")
-    }
+    override fun keyWord(): KeyWord.Element = KeyWord.getElement(currentToken)
 
     /**
      * Returns the character which is the current token.
@@ -52,9 +68,7 @@ class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
      *
      * @return Char
      */
-    override fun symbol(): Char {
-        TODO("Not yet implemented")
-    }
+    override fun symbol(): Char = currentToken[0]
 
     /**
      * Returns the string which is the current token.
@@ -62,9 +76,7 @@ class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
      *
      * @return String
      */
-    override fun identifier(): String {
-        TODO("Not yet implemented")
-    }
+    override fun identifier(): String = currentToken
 
     /**
      * Returns the integer value of the current token.
@@ -72,9 +84,7 @@ class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
      *
      * @return Int
      */
-    override fun intVal(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun intVal(): Int = currentToken.toInt()
 
     /**
      * Returns the string value of the current token, without the opening and closing double quotes.
@@ -82,7 +92,5 @@ class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
      *
      * @return String
      */
-    override fun stringVal(): String {
-        TODO("Not yet implemented")
-    }
+    override fun stringVal(): String = currentToken.substring(1, currentToken.lastIndex)
 }
