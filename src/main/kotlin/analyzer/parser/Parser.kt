@@ -21,13 +21,14 @@ abstract class Parser {
 			for (c in line) {
                 if (c == '"') {
                     mode = !mode
-                    if (builder.isNotEmpty()) {
+					builder.append(c)
+                    if (!mode && builder.isNotEmpty()) {
                         result.add(builder.toString())
                         builder.clear()
                     }
-                } else if (mode) builder.append(c)
-                else if (c.isLetterOrDigit() || c == '_') builder.append(c)
-                else if (!c.isLetterOrDigit()) {
+                } else if (mode || c.isLetterOrDigit() || c == '_') {
+					builder.append(c)
+				} else if (!c.isLetterOrDigit()) {
                     if (builder.isNotEmpty()) {
                         result.add(builder.toString())
                         builder.clear()

@@ -1,4 +1,26 @@
 package analyzer.tokenizer
 
-object Symbol {
+object Symbol : LexicalElement {
+    override val validElement: Set<String> = setOf(
+        "{",
+        "}",
+        "(",
+        ")",
+        "[",
+        "]",
+        ".",
+        ",",
+        ";",
+        "+",
+        "-",
+        "*",
+        "/",
+        "&",
+        "|",
+        "<",
+        ">",
+        "=",
+        "~"
+    )
+    override fun getType(): TokenType = TokenType.SYMBOL
 }

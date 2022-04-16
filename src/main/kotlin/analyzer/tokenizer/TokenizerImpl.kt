@@ -7,14 +7,16 @@ class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
 
     private val tokens: List<String> = parse(inputFile)
 
+    private var index = -1
+
+    private var currentToken = ""
+
     /**
      * Are there more tokens in the input.
      *
      * @return Boolean
      */
-    override fun hasMoreTokens(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun hasMoreTokens(): Boolean = index < tokens.size
 
     /**
      * Gets the next token from the input, and makes it the current token.
@@ -22,7 +24,7 @@ class TokenizerImpl(inputFile: File) : Parser(), Tokenizer {
      * Initially there is no current token.
      */
     override fun advance() {
-        TODO("Not yet implemented")
+        currentToken = tokens[++index]
     }
 
     /**
